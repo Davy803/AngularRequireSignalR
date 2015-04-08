@@ -2,3 +2,38 @@
     ViewBag.Title = "Home Page";
 }
 
+
+<div ng-app="app" ng-controller="ChatController" class="container">
+    <div class="row">
+        <div class="col-md-8">
+            
+            <div class="well">
+                <p ng-repeat="message in messages" class="bg-info">
+                    <span class="text-muted" ng-bind="message.user.timestamp"></span>
+                    <span class="text-info" ng-bind="message.user.name"></span>:
+                    <span class="text-primary" ng-bind="message.message"></span>
+                </p>
+            </div>            
+        </div>
+        <div class="col-md-4">
+            <ul>
+                <li ng-repeat="user in users" class="bg-info">
+                    {{ng-bind="message.user.name"}}
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <form ng-submit="">
+            <div class="input-group">
+                <div class="input-group-addon">Message:</div>
+                <input ng-bind="currentMessage" type="text" class="form-control">
+            </div>
+        </form>
+    </div>
+</div>
+
+@section scripts{
+    @Scripts.Render("~/bundles/require")
+    @Scripts.Render("~/bundles/app")
+}

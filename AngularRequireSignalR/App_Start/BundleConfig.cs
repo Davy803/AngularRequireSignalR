@@ -26,6 +26,22 @@ namespace AngularRequireSignalR
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+
+            bundles.Add(new ScriptBundle("~/bundles/angular").Include(
+                "~/Scripts/jquery.signalR-{version}.js",
+                "~/Scripts/angular.js",
+                "~/Scripts/angular-resource.js",
+                "~/Scripts/angular-signalr-hub.js"
+                ));
+
+            bundles.Add(new ScriptBundle("~/bundles/require").Include(
+                "~/Scripts/require.js"
+                ));
+
+            bundles.Add(new ScriptBundle("~/bundles/app").Include(
+                "~/App/requireconfig.js",
+                "~/App/bootstrap.js"
+                ));
         }
     }
 }
