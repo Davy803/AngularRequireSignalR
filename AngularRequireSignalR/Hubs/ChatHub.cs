@@ -10,16 +10,27 @@ namespace AngularRequireSignalR.Hubs
     [HubName("chatRoom")]
     public class ChatHub : Hub
     {
-        private readonly ChatRoom _chatRoom;
+        private static readonly ChatRoom _staticChatRoom = new ChatRoom();
+        private readonly ChatRoom _chatRoom = new ChatRoom();
 
-        public ChatHub():this(new ChatRoom())
+        public ChatHub():this(null)
         {
             
         }
 
         public ChatHub(ChatRoom chatRoom)
         {
-            _chatRoom = chatRoom;
+            _chatRoom = chatRoom ?? _staticChatRoom;
+        }
+
+        public List<ChatUser> ListUsers()
+        {
+            return _chatRoom.Users;
+        }
+
+        public List<ChatMessage> ListMessages()
+        {
+            return _chatRoom.Messages;
         }
 
         public ChatUser AddUser(string userId, string userName)
@@ -38,20 +49,30 @@ namespace AngularRequireSignalR.Hubs
 
     public class ChatRoom
     {
-        readonly List<ChatUser> _users = new List<ChatUser>();
-        readonly List<ChatMessage> _messages = new List<ChatMessage>();
+        private readonly List<ChatUser> _users = new List<ChatUser>();
+        private readonly List<ChatMessage> _messages = new List<ChatMessage>();
+
+        public List<ChatUser> Users
+        {
+            get { return _users; }
+        }
+
+        public List<ChatMessage> Messages
+        {
+            get { return _messages; }
+        }
 
         public ChatUser AddUser(string userId, string userName)
         {
             var user = new ChatUser { Id = userId ?? Guid.NewGuid().ToString(), Name = userName };
-            _users.Add(user);
+            Users.Add(user);
             return user;
         }
 
         public ChatMessage AddMessage(string userId, string text)
         {
             var message = new ChatMessage { UserId = userId, Message = text, TimeStamp = DateTime.Now };
-            _messages.Add(message);
+            Messages.Add(message);
             return message;
         }
     }

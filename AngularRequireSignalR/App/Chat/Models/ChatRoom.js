@@ -7,6 +7,7 @@
         this.users = [];
         this.messages = [];
     };
+
     ChatRoom.prototype.addUser = function(user) {
         this.users.push(user);
         this._userLookup[user.id] = user;
