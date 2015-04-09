@@ -1,52 +1,62 @@
-﻿app
-    .factory('ChatApp', [
-        '$rootScope', 'Hub', 'OData', function($rootScope, Hub) {
-            var ChatApp = this;
+﻿define(function(require) {
+    var app = require('Chat/app');
+    app.factory('ChatApp', [
+            '$rootScope', 'Hub', function($rootScope, Hub) {
+                var ChatApp = this;
 
-            var ChatRoom = require("Chat/Models/ChatRoom");
-            var User = require("Chat/Models/User");
-            var Message = require("Chat/Models/Message");
+                var ChatRoom = require("Chat/Models/ChatRoom");
+                var User = require("Chat/Models/User");
+                var Message = require("Chat/Models/Message");
 
-            ChatApp.room = new ChatRoom();
+                ChatApp.room = new ChatRoom();
 
-            ChatApp.currentMessage = "";
-            ChatApp.currentUser = new User({ id: "1", name: "David" });
+                ChatApp.currentMessage = "";
+                ChatApp.currentUserName = "";
+                ChatApp.currentUser = null;
 
-            //Hub setup
-            var hub = new Hub('chatRoom', {
-                listeners: {
-                    'addUser': function(user) {
-                        ChatApp.room.addUser(user);
-                        $rootScope.$apply();
+                ChatApp.connecting = true;
+                //Hub setup
+                var hub = new Hub('chatRoom', {
+                    listeners: {
+                        'addUser': function (u) {
+                            var user = new User(u);
+                            ChatApp.room.addUser(user);
+                            $rootScope.$apply();
+                        },
+                        'addMessage': function(message) {
+                            ChatApp.room.addMessage(message);
+                            $rootScope.$apply();
+                        }
                     },
-                    'addMessage': function (userId, text) {
-                        ChatApp.room.addMessage(userId, text);
-                        $rootScope.$apply();
+                    methods: ['addUser', 'addMessage'],
+                    errorHandler: function(error) {
+                        console.error(error);
                     }
-                },
-                methods: ['lock', 'unlock'],
-                errorHandler: function(error) {
-                    console.error(error);
-                }
-            });
-
-            ChatApp.prototype.enterRoom = function (userName) {
-                hub.addUser(userName).done(function (user) {
-                    ChatApp.room.addUser(new User(user));
                 });
-                $rootScope.$apply();
-            };
-            ChatApp.prototype.addMessage = function (text) {
-                
-                var message = ChatApp.room.addMessage(ChatApp.currentUser.Id, text);
 
-                hub.addMessage(ChatApp.currentUser.Id, text);
-                $rootScope.$apply();
-            };
-        }
-    ])
-    .controller('ChatController', [
-        '$scope', 'ChatApp', function ($scope, ChatApp) {
-            $scope.ChatApp = ChatApp;
-        }
-    ]);
+                ChatApp.enterRoom = function () {
+                    hub.addUser(null, ChatApp.currentUserName).done(function (u) {
+                        var user = new User(u);
+                        ChatApp.room.addUser(user);
+                        ChatApp.currentUser = user;
+                    });
+                };
+                ChatApp.addMessage = function() {
+                    hub.addMessage(ChatApp.currentUser.id, ChatApp.currentMessage);
+                };
+                hub.promise.done(function() {
+                    ChatApp.connecting = false;
+                    $rootScope.$apply();
+                });
+                hub.promise.fail(function (error) {
+                    console.log('SignalR error: ' + error);
+                });
+                return ChatApp;
+            }
+        ])
+        .controller('ChatController', [
+            '$scope', 'ChatApp', function($scope, ChatApp) {
+                $scope.ChatApp = ChatApp;
+            }
+        ]);
+});

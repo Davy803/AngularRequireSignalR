@@ -11,9 +11,9 @@
         this.users.push(user);
         this._userLookup[user.id] = user;
     };
-    ChatRoom.prototype.addMessage = function (userId, text) {
+    ChatRoom.prototype.addMessage = function (m) {
 
-        var message = new Message(this._userLookup[userId], text);
+        var message = new Message(this._userLookup[m.UserId], m.Message);
         this.messages.push(message);
         return message;
     };

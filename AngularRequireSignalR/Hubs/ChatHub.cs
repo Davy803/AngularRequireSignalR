@@ -22,16 +22,17 @@ namespace AngularRequireSignalR.Hubs
             _chatRoom = chatRoom;
         }
 
-        public void AddUser(ChatUser user)
+        public ChatUser AddUser(string userId, string userName)
         {
-            _chatRoom.AddUser(user);
+            var user = _chatRoom.AddUser(userId, userName);
             Clients.Others.addUser(user);
+            return user;
         }
 
         public void AddMessage(string userId, string text)
         {
             var message = _chatRoom.AddMessage(userId, text);
-            Clients.Others.addMessage(message);
+            Clients.All.addMessage(message);
         }
     }
 
@@ -40,9 +41,11 @@ namespace AngularRequireSignalR.Hubs
         readonly List<ChatUser> _users = new List<ChatUser>();
         readonly List<ChatMessage> _messages = new List<ChatMessage>();
 
-        public void AddUser(ChatUser user)
+        public ChatUser AddUser(string userId, string userName)
         {
+            var user = new ChatUser { Id = userId ?? Guid.NewGuid().ToString(), Name = userName };
             _users.Add(user);
+            return user;
         }
 
         public ChatMessage AddMessage(string userId, string text)

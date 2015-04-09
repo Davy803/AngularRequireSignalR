@@ -3,13 +3,15 @@
  * NOTE: the ng-app attribute should not be on the index.html when using ng.bootstrap
  */
 require([
-    'angular', 'angular-route','Chat/app'
+    'angular',
+    //'angular-route',
+    'Chat/chat'
 ], function (ng) {
     'use strict';
 
-    var ApplicationModule = angular.module('app', [
-        'routes'
-    ]);
+    //var ApplicationModule = angular.module('app', [
+    //    'routes'
+    //]);
 
     // Application-wide configuration, including route handling, modifying $http's behavior, etc
     // can go here
