@@ -4,18 +4,22 @@ using System.Linq;
 
 namespace AngularRequireSignalR.Hubs.ViewModels
 {
-    public interface IChatRoom
-    {
-        List<ChatUser> Users { get; }
-        List<ChatMessage> Messages { get; }
-        ChatUser AddUser(string userId, string userName);
-        ChatMessage AddMessage(string userId, string text);
-    }
-
     public class ChatRoom : IChatRoom
     {
+        private readonly string _roomName;
+
+        public ChatRoom(string roomName)
+        {
+            _roomName = roomName;
+        }
+
         private readonly List<ChatUser> _users = new List<ChatUser>();
         private readonly List<ChatMessage> _messages = new List<ChatMessage>();
+
+        public string Name
+        {
+            get { return _roomName; }
+        }
 
         public List<ChatUser> Users
         {

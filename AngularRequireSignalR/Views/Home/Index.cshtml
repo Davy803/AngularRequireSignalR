@@ -1,63 +1,30 @@
-﻿@{
+﻿@model AngularRequireSignalR.Services.IChatRoomService
+@{
     ViewBag.Title = "Home Page";
 }
-<style>
-    .glyphicon-refresh-animate {
-        -animation: spin .7s infinite linear;
-        -webkit-animation: spin2 .7s infinite linear;
-    }
 
-    @@-webkit-keyframes spin2 {
-        from { -webkit-transform: rotate(0deg);}
-        to { -webkit-transform: rotate(360deg);}
-    }
 
-    @@keyframes spin {
-        from { transform: scale(1) rotate(0deg);}
-        to { transform: scale(1) rotate(360deg);}
-    }
-</style>
-
-<div ng-controller="ChatController" class="container">
-    <div ng-show="ChatApp.connecting">
-        <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
-    </div>
-    <div ng-hide="ChatApp.connecting">
-        <form ng-submit="ChatApp.enterRoom()">
-            <div class="input-group">
-                <div class="input-group-addon">Username:</div>
-                <input ng-model="ChatApp.currentUserName" type="text" class="form-control">
-                <button type="submit" class="btn btn-primary btn-xs">Enter</button>
-            </div>
-        </form>
-    </div>
+<div class="container">
     <div class="row">
-        <div class="col-md-8">
+        <ul class="list-inline">
 
-            <div class="well">
-                <p ng-repeat="message in ChatApp.room.messages" class="bg-info">
-                    <span class="text-muted" ng-bind="message.timestamp | date:'medium'"></span>
-                    <span class="text-info" ng-bind="message.user.name"></span>:
-                    <span class="text-primary" ng-bind="message.message"></span>
-                </p>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <ul class="list-unstyled">
-                <li ng-repeat="user in ChatApp.room.users" class="bg-info">
-                    {{user.name}}
+            @foreach (var room in Model.ListRooms())
+            {
+                <li>
+                    @Html.ActionLink(room, "Room", "Chat", new { roomName = room }, null)
                 </li>
-            </ul>
-        </div>
+            }
+        </ul>
     </div>
     <div class="row">
-        <form ng-submit="ChatApp.addMessage()">
+        @using (Html.BeginForm("Join", "Chat"))
+        {
             <div class="input-group">
-                <div class="input-group-addon">Message:</div>
-                <input ng-model="ChatApp.currentMessage" type="text" class="form-control">
-                <button type="submit" class="btn btn-primary btn-xs">Send</button>
+                <div class="input-group-addon">Create Room:</div>
+                <input type="text" name="roomName" class="form-control">
+                <button type="submit" class="btn btn-primary btn-xs">Join</button>
             </div>
-        </form>
+        }
     </div>
 </div>
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using AngularRequireSignalR.Hubs.ViewModels;
+using AngularRequireSignalR.Services;
 
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
@@ -12,38 +13,33 @@ namespace AngularRequireSignalR.Hubs
     [HubName("chatRoom")]
     public class ChatHub : Hub
     {
-        private readonly IChatRoom _chatRoom = new ChatRoom();
+        private readonly IChatRoomService _chatRoomService;
 
-        public ChatHub():this(null)
+        public ChatHub(IChatRoomService chatRoomService)
         {
-            
+            _chatRoomService = chatRoomService;
         }
 
-        public ChatHub(IChatRoom chatRoom)
+        public List<ChatUser> ListUsers(string roomName)
         {
-            _chatRoom = chatRoom;
+            return _chatRoomService.GetOrCreateChatRoom(roomName).Users;
         }
 
-        public List<ChatUser> ListUsers()
+        public List<ChatMessage> ListMessages(string roomName)
         {
-            return _chatRoom.Users;
+            return _chatRoomService.GetOrCreateChatRoom(roomName).Messages;
         }
 
-        public List<ChatMessage> ListMessages()
+        public ChatUser AddUser(string roomName, string userId, string userName)
         {
-            return _chatRoom.Messages;
-        }
-
-        public ChatUser AddUser(string userId, string userName)
-        {
-            var user = _chatRoom.AddUser(userId, userName);
+            var user = _chatRoomService.GetOrCreateChatRoom(roomName).AddUser(userId, userName);
             Clients.Others.addUser(user);
             return user;
         }
 
-        public void AddMessage(string userId, string text)
+        public void AddMessage(string roomName, string userId, string text)
         {
-            var message = _chatRoom.AddMessage(userId, text);
+            var message = _chatRoomService.GetOrCreateChatRoom(roomName).AddMessage(userId, text);
             Clients.All.addMessage(message);
         }
     }

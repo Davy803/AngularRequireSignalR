@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Autofac.Integration.SignalR;
-
 using Microsoft.Owin;
 
 using Owin;
@@ -17,10 +15,8 @@ namespace AngularRequireSignalR
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
-            
-            var container = ConfigureAutofac(app);
-            
-            ConfigureSignalR(app, new AutofacDependencyResolver(container));
+
+            ConfigureAutofac(app);
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿require.config({
-    baseUrl: 'App',
+    baseUrl: '/App',
     // alias paths for library modules
     paths: {
         'jquery': '../Scripts/jquery-2.1.3',

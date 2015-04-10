@@ -1,0 +1,53 @@
+﻿@model AngularRequireSignalR.Hubs.ViewModels.IChatRoom
+@{
+    ViewBag.Title = "Chat Room - " + Model.Name;
+}
+
+<div ng-controller="ChatController" class="container" ng-init="ChatApp.init('@Model.Name')">
+    <div class="row" ng-hide="ChatApp.status == 'done'">
+        <div ng-show="ChatApp.status == 'connecting'">
+            <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
+        </div>
+        <div ng-hide="ChatApp.status == 'connecting'">
+            <form ng-submit="ChatApp.enterRoom()">
+                <div class="input-group">
+                    <div class="input-group-addon">Username:</div>
+                    <input ng-model="ChatApp.currentUserName" type="text" class="form-control">
+                    <button type="submit" class="btn btn-primary btn-xs">Enter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="well">
+                <p ng-repeat="message in ChatApp.room.messages" class="bg-info">
+                    <span class="text-muted" ng-bind="message.timestamp | date:'medium'"></span>
+                    <span class="text-info" ng-bind="message.user.name"></span>:
+                    <span class="text-primary" ng-bind="message.message"></span>
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <ul class="list-unstyled">
+                <li ng-repeat="user in ChatApp.room.users" class="bg-info">
+                    {{user.name}}
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <form ng-submit="ChatApp.addMessage()">
+            <div class="input-group">
+                <div class="input-group-addon">Message:</div>
+                <input ng-model="ChatApp.currentMessage" type="text" class="form-control">
+                <button type="submit" class="btn btn-primary btn-xs">Send</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section scripts{
+    @Scripts.Render("~/bundles/require")
+    @Scripts.Render("~/bundles/app")
+}

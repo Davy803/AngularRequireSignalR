@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+
+using Autofac;
+using Autofac.Integration.SignalR;
 
 using Microsoft.AspNet.SignalR;
 
@@ -19,6 +23,12 @@ namespace AngularRequireSignalR
             };
 
             app.MapSignalR(hubConfiguration);
+        }
+
+
+        private static void RegisterSignalRDependencies(ContainerBuilder builder)
+        {
+            builder.RegisterHubs(Assembly.GetExecutingAssembly());
         }
     }
 }

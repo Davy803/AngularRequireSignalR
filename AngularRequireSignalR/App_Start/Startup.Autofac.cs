@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 using AngularRequireSignalR.Hubs.ViewModels;
+using AngularRequireSignalR.Services;
 
 using Autofac;
-using Autofac.Integration.SignalR;
 
 using Owin;
 
@@ -14,7 +13,7 @@ namespace AngularRequireSignalR
 {
     public partial class Startup
     {
-        public static IContainer ConfigureAutofac(IAppBuilder app)
+        public static void ConfigureAutofac(IAppBuilder app)
         {
             var builder = new ContainerBuilder();
 
@@ -22,16 +21,19 @@ namespace AngularRequireSignalR
 
             var container = builder.Build();
 
-            return container;
+            ConfigureSignalR(app, new Autofac.Integration.SignalR.AutofacDependencyResolver(container));
+
+            ConfigureMvc(app, new Autofac.Integration.Mvc.AutofacDependencyResolver(container), container);
         }
 
         private static void RegisterDependencies(ContainerBuilder builder)
         {
             // You can register hubs all at once using assembly scanning...
+            RegisterSignalRDependencies(builder);
+            RegisterMvcDependencies(builder);
 
-            builder.RegisterHubs(Assembly.GetExecutingAssembly());
-
-            builder.RegisterType<ChatRoom>().As<IChatRoom>().InstancePerLifetimeScope();
+            builder.RegisterType<ChatRoom>().As<IChatRoom>();
+            builder.RegisterType<ChatRoomService>().As<IChatRoomService>().SingleInstance();
         }
     }
 }
