@@ -236,8 +236,11 @@
   <ItemGroup>
     <Content Include="App\bootstrap.js" />
     <Content Include="App\Chat\app.js" />
-    <Content Include="App\Chat\chat.js" />
+    <Content Include="App\Chat\chatViewModel.js" />
+    <Content Include="App\Chat\chatHub.js" />
+    <Content Include="App\Chat\chatCtrl.js" />
     <Content Include="App\Chat\Models\ChatRoom.js" />
+    <Content Include="App\Chat\Models\chatStatus.js" />
     <Content Include="App\Chat\Models\Message.js" />
     <Content Include="App\Chat\Models\User.js" />
     <Content Include="App\requireconfig.js" />

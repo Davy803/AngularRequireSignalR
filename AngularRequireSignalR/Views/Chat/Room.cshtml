@@ -3,16 +3,16 @@
     ViewBag.Title = "Chat Room - " + Model.Name;
 }
 
-<div ng-controller="ChatController" class="container" ng-init="ChatApp.init('@Model.Name')">
-    <div class="row" ng-hide="ChatApp.status == 'done'">
-        <div ng-show="ChatApp.status == 'connecting'">
+<div ng-controller="ChatController" class="container" ng-init="vm.init('@Model.Name')" ng-cloak>
+    <div class="row" ng-hide="vm.status == 'done'">
+        <div ng-show="vm.status == 'connecting'">
             <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
         </div>
-        <div ng-hide="ChatApp.status == 'connecting'">
-            <form ng-submit="ChatApp.enterRoom()">
+        <div ng-hide="vm.status == 'connecting'">
+            <form ng-submit="vm.enterRoom()">
                 <div class="input-group">
                     <div class="input-group-addon">Username:</div>
-                    <input ng-model="ChatApp.currentUserName" type="text" class="form-control">
+                    <input ng-model="vm.currentUserName" type="text" class="form-control">
                     <button type="submit" class="btn btn-primary btn-xs">Enter</button>
                 </div>
             </form>
@@ -21,7 +21,7 @@
     <div class="row">
         <div class="col-md-8">
             <div class="well">
-                <p ng-repeat="message in ChatApp.room.messages" class="bg-info">
+                <p ng-repeat="message in vm.room.messages" class="bg-info">
                     <span class="text-muted" ng-bind="message.timestamp | date:'medium'"></span>
                     <span class="text-info" ng-bind="message.user.name"></span>:
                     <span class="text-primary" ng-bind="message.message"></span>
@@ -30,17 +30,17 @@
         </div>
         <div class="col-md-4">
             <ul class="list-unstyled">
-                <li ng-repeat="user in ChatApp.room.users" class="bg-info">
+                <li ng-repeat="user in vm.room.users" class="bg-info">
                     {{user.name}}
                 </li>
             </ul>
         </div>
     </div>
     <div class="row">
-        <form ng-submit="ChatApp.addMessage()">
+        <form ng-submit="vm.addMessage()">
             <div class="input-group">
                 <div class="input-group-addon">Message:</div>
-                <input ng-model="ChatApp.currentMessage" type="text" class="form-control">
+                <input ng-model="vm.currentMessage" type="text" class="form-control">
                 <button type="submit" class="btn btn-primary btn-xs">Send</button>
             </div>
         </form>
