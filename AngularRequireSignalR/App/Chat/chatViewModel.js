@@ -2,7 +2,7 @@
     var statuses = require('Chat/Models/chatStatus');
     var app = require('Chat/app');
 
-    app.factory('ChatViewModel', [
+    app.factory('chatViewModel', [
         function() {
             var ChatViewModel = this;
 
@@ -15,7 +15,7 @@
             ChatViewModel.currentUser = null;
 
             ChatViewModel.status = statuses.connecting;
-            ChatViewModel.currentRoom = null;
+            ChatViewModel.currentRoomName = null;
 
             return ChatViewModel;
         }

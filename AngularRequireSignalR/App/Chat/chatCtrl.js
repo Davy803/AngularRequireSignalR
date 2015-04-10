@@ -5,13 +5,22 @@
     require('Chat/chatViewModel');
 
     app.controller('ChatController', [
-        '$scope', 'ChatViewModel', 'chatHub', function($scope, vm, hub) {
-            $scope.vm = vm;
+        '$scope', 'chatViewModel', 'chatHub', function ($scope, chatViewModel, hub) {
+            var _this = this;
+
+            _this.currentMessage = "";
+            _this.currentUserName = "";
+            _this.currentUser = null;
+            
+            _this.status = statuses.connecting;
+            _this.currentRoomName = null;
+
+            //_this.vm = vm;
 
             var User = require("Chat/Models/User");
 
             hub.promise.done(function() {
-                vm.status = statuses.loading;
+                _this.status = statuses.loading;
                 $scope.$apply();
             });
 
@@ -19,17 +28,17 @@
                 console.log('SignalR error: ' + error);
             });
 
-            vm.init = function(room) {
-                vm.currentRoom = room;
+            _this.init = function (roomName) {
+                _this.currentRoomName = roomName;
                 hub.promise.done(function() {
-                    var userPromise = hub.listUsers(vm.currentRoom).done(function(users) {
+                    var userPromise = hub.listUsers(_this.currentRoomName).done(function (users) {
                         for (var i = 0; i < users.length; i++) {
-                            vm.room.addUser(new User(users[i]));
+                            chatViewModel.room.addUser(new User(users[i]));
                         }
                     });
-                    var messagePromise = hub.listMessages(vm.currentRoom).done(function(messages) {
+                    var messagePromise = hub.listMessages(_this.currentRoomName).done(function (messages) {
                         for (var i = 0; i < messages.length; i++) {
-                            vm.room.addMessage(messages[i]);
+                            chatViewModel.room.addMessage(messages[i]);
                         }
                     });
                     $.when.apply(window, [userPromise, messagePromise]).then(function() {
@@ -38,19 +47,20 @@
                 });
             };
 
-            vm.enterRoom = function() {
-                hub.addUser(vm.currentRoom, null, vm.currentUserName).done(function(u) {
-                    var user = new User(u);
-                    vm.room.addUser(user);
-                    vm.currentUser = user;
+            _this.enterRoom = function () {
+                hub.addUser(_this.currentRoomName, null, _this.currentUserName)
+                    .done(function(u) {
+                        var user = new User(u);
+                        chatViewModel.room.addUser(user);
+                        _this.currentUser = user;
 
-                    vm.status = statuses.done;
-                    $scope.$apply();
-                });
-
+                        _this.status = statuses.done;
+                        $scope.$apply();
+                    });
             };
-            vm.addMessage = function() {
-                hub.addMessage(vm.currentRoom, vm.currentUser.id, vm.currentMessage);
+            _this.addMessage = function () {
+                hub.addMessage(_this.currentRoomName, _this.currentUser.id, _this.currentMessage);
+                _this.currentMessage = '';
             };
         }
     ]);

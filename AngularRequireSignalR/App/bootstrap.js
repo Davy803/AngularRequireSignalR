@@ -5,7 +5,7 @@
 require([
     'angular',
     //'angular-route',
-    'Chat/chatCtrl'
+    'Chat/main'
 ], function (ng) {
     'use strict';
 

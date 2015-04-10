@@ -5,7 +5,7 @@
     var User = require("Chat/Models/User");
 
     app.factory('chatHub', [
-        '$rootScope', 'Hub', 'ChatViewModel', function($rootScope, Hub, chatViewModel) {
+        '$rootScope', 'Hub', 'chatViewModel', function($rootScope, Hub, chatViewModel) {
 
             //Hub setup
             var hub = new Hub('chatRoom', {

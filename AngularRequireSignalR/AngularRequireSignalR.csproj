@@ -235,7 +235,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App\bootstrap.js" />
+    <Content Include="App\Chat\main.js" />
     <Content Include="App\Chat\app.js" />
+    <Content Include="App\Chat\chatRoomCtrl.js" />
     <Content Include="App\Chat\chatViewModel.js" />
     <Content Include="App\Chat\chatHub.js" />
     <Content Include="App\Chat\chatCtrl.js" />
