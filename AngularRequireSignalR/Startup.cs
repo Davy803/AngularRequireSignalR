@@ -1,8 +1,15 @@
-﻿using Microsoft.AspNet.SignalR;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using Autofac.Integration.SignalR;
+
 using Microsoft.Owin;
+
 using Owin;
 
-[assembly: OwinStartupAttribute(typeof(AngularRequireSignalR.Startup))]
+[assembly: OwinStartup(typeof(AngularRequireSignalR.Startup))]
+
 namespace AngularRequireSignalR
 {
     public partial class Startup
@@ -10,10 +17,10 @@ namespace AngularRequireSignalR
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
-            //app.MapSignalR();
-            var hubConfiguration = new HubConfiguration();
-            hubConfiguration.EnableDetailedErrors = true;
-            app.MapSignalR(hubConfiguration);
+            
+            var container = ConfigureAutofac(app);
+            
+            ConfigureSignalR(app, new AutofacDependencyResolver(container));
         }
     }
 }
