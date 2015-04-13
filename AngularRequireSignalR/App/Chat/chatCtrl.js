@@ -5,8 +5,10 @@
     require('Chat/chatViewModel');
 
     app.controller('ChatController', [
-        '$scope', 'chatViewModel', 'chatHub', function ($scope, chatViewModel, hub) {
+        '$scope', 'chatViewModel', 'ChatHub', function ($scope, chatViewModel, ChatHub) {
             var _this = this;
+
+            var hub = new ChatHub($scope);
 
             _this.currentMessage = "";
             _this.currentUserName = "";

@@ -4,29 +4,35 @@
 
     var User = require("Chat/Models/User");
 
-    app.factory('chatHub', [
-        '$rootScope', 'Hub', 'chatViewModel', function($rootScope, Hub, chatViewModel) {
+    app.factory('ChatHub', [
+        'Hub', 'chatViewModel', function(Hub, chatViewModel) {
 
-            //Hub setup
-            var hub = new Hub('chatRoom', {
-                listeners: {
-                    'addUser': function(u) {
-                        var user = new User(u);
-                        chatViewModel.room.addUser(user);
-                        $rootScope.$apply();
+            var ChatHub = function($scope) {
+                //Hub setup
+                var hub = new Hub('chatRoom', {
+                    listeners: {
+                        'addUser': function(u) {
+                            var user = new User(u);
+                            chatViewModel.room.addUser(user);
+                            $scope.$apply();
+                        },
+                        'addMessage': function(message) {
+                            chatViewModel.room.addMessage(message);
+                            $scope.$apply();
+                        }
                     },
-                    'addMessage': function(message) {
-                        chatViewModel.room.addMessage(message);
-                        $rootScope.$apply();
+                    methods: ['addUser', 'addMessage', 'listUsers', 'listMessages'],
+                    errorHandler: function(error) {
+                        console.error(error);
                     }
-                },
-                methods: ['addUser', 'addMessage', 'listUsers', 'listMessages'],
-                errorHandler: function(error) {
-                    console.error(error);
-                }
-            });
+                });
 
-            return hub;
+                for (var functionName in hub) {
+                    this[functionName] = hub[functionName];
+                }
+            }
+
+            return ChatHub;
         }
     ]);
 });

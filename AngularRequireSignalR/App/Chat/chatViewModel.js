@@ -2,22 +2,22 @@
     var statuses = require('Chat/Models/chatStatus');
     var app = require('Chat/app');
 
-    app.factory('chatViewModel', [
+    var ChatRoom = require("Chat/Models/ChatRoom");
+
+    app.service('chatViewModel', [
         function() {
-            var ChatViewModel = this;
-
-            var ChatRoom = require("Chat/Models/ChatRoom");
+            var chatViewModel = {};
             
-            ChatViewModel.room = new ChatRoom();
+            chatViewModel.room = new ChatRoom();
 
-            ChatViewModel.currentMessage = "";
-            ChatViewModel.currentUserName = "";
-            ChatViewModel.currentUser = null;
+            chatViewModel.currentMessage = "";
+            chatViewModel.currentUserName = "";
+            chatViewModel.currentUser = null;
 
-            ChatViewModel.status = statuses.connecting;
-            ChatViewModel.currentRoomName = null;
+            chatViewModel.status = statuses.connecting;
+            chatViewModel.currentRoomName = null;
 
-            return ChatViewModel;
+            return chatViewModel;
         }
     ]);
 });
